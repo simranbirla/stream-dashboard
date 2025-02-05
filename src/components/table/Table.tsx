@@ -48,9 +48,6 @@ export default function Table() {
     const [data, _setData] = useState<TTableData[]>(tableData)
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
-
-    console.log(columnFilters)
-
     const table = useReactTable({
         data,
         columns,
