@@ -15,7 +15,6 @@ export interface TTableData {
 
 const columnHelper = createColumnHelper<TTableData>()
 
-
 const columns = [
     columnHelper.accessor(row => row.userID.toString(), {
         id: 'userID',
@@ -32,6 +31,7 @@ const columns = [
     }),
     columnHelper.accessor('streamCount', {
         header: () => <span>Stream Count</span>,
+        sortDescFirst: true,
         cell: info => info.renderValue(),
 
     }),
@@ -48,6 +48,8 @@ export default function Table() {
     const [data, _setData] = useState<TTableData[]>(tableData)
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
+
+    console.log(columnFilters)
 
     const table = useReactTable({
         data,
@@ -72,15 +74,22 @@ export default function Table() {
     }, [])
 
     const handleChangeFilters = (tableName: string, value: string | number) => {
+        if (value === undefined) {
+            return table.getColumn(tableName)?.setFilterValue('')
+        }
         table.getColumn(tableName)?.setFilterValue(value)
 
     }
 
     const handleSorting = (value: string) => {
+        if (!value) {
+            return table.getColumn('streamCount')?.clearSorting()
+        }
         if (value === 'desc') {
             table.getColumn('streamCount')?.toggleSorting(true)
         } else {
             table.getColumn('streamCount')?.toggleSorting(false)
+
         }
     }
 
@@ -88,6 +97,7 @@ export default function Table() {
 
     const resetFilters = () => {
         table.getAllColumns().map(col => col.setFilterValue(null))
+        table.getColumn('streamCount')?.clearSorting()
     }
 
     return (
@@ -105,10 +115,11 @@ export default function Table() {
                     </div>
                     <div className='flex gap-3 flex-col md:flex-row'>
                         <select name="userId" onChange={(e) => handleChangeFilters("userID", e.target.value)} value={getValue('userID') as string} className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300'>
-                            <option value={undefined} className='text-gray-300'>Filter By UserId</option>
+                            <option value={''} className='text-gray-300'>Filter By UserId</option>
                             {userIds.map(id => <option key={id} value={id}>{id}</option>)}
                         </select>
                         <select name="sort" onChange={(e) => handleSorting(e.target.value)} className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300'>
+                            <option value={''} className='text-gray-300'>Sort By Streams</option>
                             <option value={"desc"}>Most Streamed</option>
                             <option value={"asc"}>Least Streamed</option>
                         </select>
