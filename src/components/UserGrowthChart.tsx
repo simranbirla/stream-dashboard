@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import LineChart from './charts/LineChart'
 import { ChartData } from 'chart.js';
 import { lineChart } from '../../data';

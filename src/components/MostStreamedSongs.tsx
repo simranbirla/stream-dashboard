@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import BarChart from './charts/BarChart';
 import { ChartData } from 'chart.js';
 import { barChart } from '../../data';
